@@ -1,0 +1,42 @@
+version: "3.8"
+services:
+  backend:
+    container_name: backend
+    env_file:
+      - .env
+    build:
+      context: ./backend
+    command: sh -c "python manage.py migrate && python manage.py createsuperuser --noinput && python manage.py runserver 0.0.0.0:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+    command: npm run serve
+    depends_on:
+      - backend
+    ports:
+      - "8080:8080"
+
+  db:
+    container_name: db
+    image: postgres:15.1-alpine
+    environment:
+      POSTGRES_DB: ${DJANGO_DB_NAME}
+      POSTGRES_USER: ${DJANGO_DB_USER}
+      POSTGRES_PASSWORD: ${DJANGO_DB_PASSWORD}
+    healthcheck:
+      test: [ "CMD-SHELL", "psql -U ${DJANGO_DB_USER}", "pg_isready", "-U", "${DJANGO_DB_USER}", "-d", "${DJANGO_DB_NAME}" ]
+      interval: 3s
+      timeout: 10s
+      retries: 10
+    volumes:
+      - images_db:/var/lib/postgresql/data
+
+volumes:
+  images_db:
