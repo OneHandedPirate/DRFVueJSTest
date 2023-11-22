@@ -20,7 +20,7 @@
 
 ### Установка:
 
-- стянуть репозиторий:<br>`git clone git clone https://github.com/OneHandedPirate/DRFVueJSTest.git`
+- стянуть репозиторий:<br>`git clone https://github.com/OneHandedPirate/DRFVueJSTest.git`
 - перейти в директорию проекта:<br>`cd DRFVueJSTest`
 - создать файл `.env` со следующим набором переменных:<br>
 `DJANGO_DB_NAME` - имя базы данных;<br>
